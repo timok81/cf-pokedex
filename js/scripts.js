@@ -14,6 +14,22 @@ let pokemonRepository = (function () {
         pokemonList.push(item);
     }
 
+    //Creates buttons for each pokemon in list
+    function addListItem(pokemon) {
+        let pokemonList = document.querySelector('.pokemon-list');
+        let listElement = document.createElement('li');
+        let pokemonButton = document.createElement("button");
+        pokemonButton.innerText = pokemon.name;
+        pokemonButton.classList.add("pokemon-button");
+        pokemonButton.addEventListener('click', () => showDetails(pokemon));
+        listElement.appendChild(pokemonButton);
+        pokemonList.appendChild(listElement);
+    }
+
+    function showDetails(pokemon) {
+        console.log(pokemon);
+    }
+
     function find(name) {
         return pokemonList.filter((pokemon) => pokemon.name === name);
     }
@@ -21,6 +37,7 @@ let pokemonRepository = (function () {
     return {
         getAll,
         add,
+        addListItem,
         find
     }
 })();
@@ -34,16 +51,5 @@ pokemonRepository.add({ name: 'Weedle', height: 0.3, types: ['bug', 'poison'] })
 
 //Displays pokemon information on the page
 pokemonRepository.getAll().forEach(function (pokemon) {
-    if (pokemonRepository.getAll().indexOf(pokemon) === 0) {
-        document.write(`<h1>Pokemons:</h1>`);
-        document.write(`<ul>`);
-    }
-
-    document.write(`<li>${pokemon.name} (height: ${pokemon.height})`)
-    if (pokemon.height >= 0.7) {
-        document.write(`<em> - Wow, that's big!</em>`)
-    }
-    document.write(`</li>`);
-
-    if (pokemonRepository.getAll().indexOf(pokemon) === pokemonRepository.getAll().length) { document.write(`</ul>`) }
+    pokemonRepository.addListItem(pokemon);
 })

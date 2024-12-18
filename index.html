@@ -7,23 +7,35 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
     <link rel="stylesheet" href="./css/styles.css">
     <title>Pokedex</title>
 </head>
 
 <body>
-    <div class="content" aria-hidden="true">
+    <div class="content">
         <header>
             <img src="./img/pokedex_logo_narrow2.png" alt="pokedex logo">
+            <!--temp searchbar for styling purposes-->
+            <form action="" class="search-form">
+                <input type="text" id="search" placeholder="Search" alt="search for pokemons">
+            </form>
         </header>
+
         <main>
-            <div class="pokemonlist">
-                <script src="./js/scripts.js"></script>
+            <img src="./img/header_trim1.png" alt="">
+            <div class="pokemon-container">
+                <ul class="pokemon-list">
+
+                </ul>
             </div>
         </main>
     </div>
 
     <div class="bgshapeA"></div>
+    <script src="./js/scripts.js"></script>
+    <script src="js/tota11y.min.js"></script>
 </body>
 
 </html>
