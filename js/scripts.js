@@ -7,24 +7,24 @@ let pokemonRepository = (function () {
         return pokemonList;
     }
 
+    //Adds pokemon to repo
     function add(item) {
         if (typeof item != "object") { return console.warn("Only objects may be added to list") }
         if (!Object.keys(item).includes("name")) { return console.warn("Pokemon must have a name") }
         pokemonList.push(item);
     }
 
-    //Creates buttons for each pokemon in list
+    //Creates buttons on the page for each pokemon in repo
     function addListItem(pokemon) {
         let pokemonList = document.querySelector('.pokemon-list');
-        let listElement = document.createElement('li');
         let pokemonButton = document.createElement("button");
-        pokemonButton.innerText = pokemon.name;
+        pokemonButton.innerText = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
         pokemonButton.classList.add("pokemon-button");
         pokemonButton.addEventListener('click', () => showDetails(pokemon));
-        listElement.appendChild(pokemonButton);
-        pokemonList.appendChild(listElement);
+        pokemonList.appendChild(pokemonButton);
     }
 
+    //Brings up modal
     function showDetails(pokemon) {
         showModal(pokemon);
     }
@@ -54,6 +54,7 @@ let pokemonRepository = (function () {
         })
     }
 
+    //Fetches pokemon's details from API
     function loadDetails(item) {
         let url = item.detailsUrl;
         showLoadingMessage();
@@ -111,6 +112,7 @@ let pokemonRepository = (function () {
         closeButton.addEventListener('click', hideModal)
         topDiv.appendChild(closeButton);
 
+        //Renders info in modal based on API data
         loadDetails(pokemon).then(function () {
             console.log(pokemon);
 
@@ -157,11 +159,22 @@ let pokemonRepository = (function () {
         });
 
         modalContainer.classList.add('is-visible');
+        
+        //Hides modal when clicking outside the modal
         modalContainer.addEventListener('click', (e) => {
             if (e.target === modalContainer) {
                 hideModal();
             }
         })
+
+        //Hides modal when pressing ESC
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalContainer.classList.contains('is-visible')) {
+                hideModal();
+            }
+        })
+
+        //Prevents scrolling of the main page
         document.body.style.overflow = 'hidden';
     }
 
@@ -180,7 +193,6 @@ let pokemonRepository = (function () {
         loadDetails
     }
 })();
-
 
 
 //Fetches pokemons from API and renders buttons on page
