@@ -12,6 +12,11 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+    margin-right: calc(100% - 100vw);
+}
+
 body {
     font-family: "Maven Pro", sans-serif;
     font-optical-sizing: auto;
@@ -113,6 +118,153 @@ li {
     padding: 4px;
     border-radius: 5px;
     list-style: none;
+}
+
+.modal-container {
+    display: none;
+}
+
+.modal-container.is-visible {
+    position: fixed;
+    display: grid;
+    overflow: auto;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(0, 0, 0, 0.8);
+    z-index: 99;
+    padding: 32px;
+}
+
+.modal {
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr 30px;
+    background-color: white;
+    padding: 16px;
+    border-radius: 10px;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.modal-close-button {
+    height: 30px;
+    width: 30px;
+    border-radius: 5px;
+    border: 0;
+    background-color: var(--secondary-color);
+    color: white;
+    font-size: 20px;
+}
+
+.modal-top {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+
+}
+
+.modal-image {
+    grid-column: 1 / 2;
+
+}
+
+.modal-details {
+    grid-column: 2 / 3;
+    padding: 0 32px 0 32px;
+}
+
+.modal-details h1 {
+    margin: 0 0 16px 0;
+}
+
+.type-span {
+    width: 75px;
+    height: 25px;
+    display: inline-block;
+    color: white;
+    text-align: center;
+    transform: skewX(-10deg);
+    margin-right: 8px;
+}
+
+.type-span.grass {
+    background-color: green;
+}
+
+.type-span.poison {
+    background-color: rgb(201, 0, 174);
+}
+
+.type-span.fire {
+    background-color: rgb(255, 145, 0);
+}
+
+.type-span.water {
+    background-color: rgb(0, 140, 255);
+}
+
+.type-span.flying {
+    background-color: rgb(199, 217, 255);
+    color: black;
+}
+
+.type-span.bug {
+    background-color: rgb(85, 175, 108);
+    color: black;
+}
+
+.type-span.normal {
+    background-color: rgb(156, 156, 156);
+    color: black;
+}
+
+.type-span.ground {
+    background-color: rgb(151, 82, 42);
+}
+
+.type-span.electric {
+    background-color: rgb(255, 204, 62);
+}
+
+.type-span.fairy {
+    background-color: rgb(255, 129, 182);
+}
+
+.type-span.fighting {
+    background-color: rgb(216, 35, 35);
+}
+
+.type-span.steel {
+    background-color: rgb(129, 148, 184);
+}
+
+.type-span.psychic {
+    background-color: rgb(109, 62, 196);
+}
+
+.type-span.ghost {
+    background-color: rgb(129, 103, 224);
+}
+
+.type-span.rock {
+    background-color: rgb(170, 152, 138);
+}
+
+
+.details-profile {
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    padding: 8px;
+    margin-top: 16px;
+    min-height: 100px;
+}
+
+.details-profile p {
+    margin: 0;
+}
+
+.pokemon-image {
+    max-width: 400px;
+    width: 100%;
 }
 
 @media all and (max-width: 500px) {
