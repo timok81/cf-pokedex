@@ -114,8 +114,6 @@ let pokemonRepository = (function () {
 
         //Renders info in modal based on API data
         loadDetails(pokemon).then(function () {
-            console.log(pokemon);
-
             let image = document.createElement('img');
             image.src = pokemon.imageUrl;
             image.classList.add('pokemon-image')
