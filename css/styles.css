@@ -7,6 +7,7 @@
     --closebutton-hover-color: rgb(255, 133, 103);
     --searchbar-border-color: rgb(101, 193, 255);
     --searchbar-bg-color: rgb(233, 233, 233);
+    --box-shadow-color: rgb(0, 0, 0, 0.5);
 }
 
 * {
@@ -151,6 +152,7 @@ li {
     max-width: 1200px;
     width: 100%;
     border: 5px solid var(--primary-color);
+    box-shadow: 2px 5px 10px var(--box-shadow-color);
 }
 
 .modal-close-button {
