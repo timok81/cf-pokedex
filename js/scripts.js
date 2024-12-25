@@ -90,6 +90,7 @@ let pokemonRepository = (function () {
 
     //Brings up details modal about clicked pokemon
     function showModal(pokemon) {
+        //Renders modal basic elements
         let modalContainer = document.querySelector('.modal-container');
         modalContainer.innerHTML = '';
         let modal = document.createElement('div');
@@ -114,15 +115,18 @@ let pokemonRepository = (function () {
 
         //Renders info in modal based on API data
         loadDetails(pokemon).then(function () {
+            //Renders pokemon image
             let image = document.createElement('img');
             image.src = pokemon.imageUrl;
             image.classList.add('pokemon-image')
             imageDiv.appendChild(image);
 
+            //Renders pokemon name
             let name = document.createElement('h1');
             name.innerText = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
             detailsDiv.appendChild(name);
 
+            //Renders pokemon type indicators
             pokemon.types.forEach(element => {
                 let typeSpan = document.createElement('div');
                 typeSpan.classList.add('type-span');
@@ -131,6 +135,7 @@ let pokemonRepository = (function () {
                 detailsDiv.appendChild(typeSpan);
             });
 
+            //Renders pokemon details area
             let detailsProfile = document.createElement('div');
             detailsProfile.classList.add('details-profile');
             detailsDiv.appendChild(detailsProfile);
@@ -199,3 +204,4 @@ pokemonRepository.loadList().then(function () {
         pokemonRepository.addListItem(pokemon);
     });
 });
+
