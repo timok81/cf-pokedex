@@ -4,42 +4,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&display=swap" rel="stylesheet">
+
+    <!--Bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!--Custom CSS-->
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
     <link rel="stylesheet" href="./css/styles.css">
+
     <title>Pokedex</title>
 </head>
 
 <body>
-    <div class="modal-container"></div>
-    
-    <div class="content">
-        <header>
-            <img src="./img/pokedex_logo_narrow2.png" alt="pokedex logo">
-            <!--temp searchbar for styling purposes-->
-            <form action="" class="search-form">
-                <label for="search"></label>
-                <input type="text" id="search" placeholder="Search" alt="search for pokemons">
-            </form>
+    <div class="modal fade" id="pokemonModal" aria-labelledby="..." tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="row justify-content-center">
+                            <img src="#" alt="image of pokemon" class="col pokemon-image">
+                        </div>
+                        <div class="row align-items-center flex-nowrap">
+                            <span class="prevButton col text-start"></span>
+                            <h1 class="modal-title text-center text-nowrap col mx-0"></h1>
+                            <span class="nextButton col text-end"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container content">
+        <header class="container px-0">
+            <nav class="navbar">
+                <div class="container-fluid">
+                    <a class="navbar-brand mx-auto py-2" href="#">
+                        <img src="./img/pokedex_logo_narrow2.png" alt="pokedex logo" class="logo">
+                    </a>
+                    <form class="d-flex mx-auto px-1" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </nav>
+
+            <div class="row">
+                <img src="./img/header_trim1.png" alt="" width="100%">
+            </div>
         </header>
 
-        <main>
-            <img src="./img/header_trim1.png" alt="">
-            <div class="pokemon-container">
-                <div class="pokemon-list">
-
+        <main class="container">
+            <div class="row">
+                <div class="col pokemon-list px-4 mb-4">
+                    <div class="list-group" role="list"></div>
                 </div>
             </div>
         </main>
     </div>
+
     <!--decorative background element-->
     <div class="bgshapeA"></div>
 
+    <!--Scripts-->
     <script src="./js/promise-polyfill.js"></script>
     <script src="./js/fetch-polyfill.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
     <script src="./js/scripts.js"></script>
     <script src="js/tota11y.min.js"></script>
 </body>
