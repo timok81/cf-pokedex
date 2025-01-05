@@ -139,27 +139,17 @@ let pokemonRepository = (function () {
         return response.json();
       })
       .then(function (data) {
-        item.evolutions = getEvolutions(data);
+        item.evolutions = getEvolutions([data.chain]);
       })
       .catch(function (error) {
         console.error(error);
       });
   }
 
-  function getEvolutions(data) {
-    let evolutions = [];
-    findEvolutions([data.chain]);
-
-    function findEvolutions(array) {
-      if (array[0].evolves_to.length > 0) {
-        evolutions.push(array[0].species.name);
-        findEvolutions(array[0].evolves_to);
-      } else {
-        evolutions.push(array[0].species.name);
-        return 0;
-      }
-    }
-    return evolutions;
+  function getEvolutions(array, evos = []) {
+    evos.push(array[0].species.name);
+    if (array[0].evolves_to.length > 0) getEvolutions(array[0].evolves_to, evos);
+    return evos;
   }
 
   //Displays loading msg while API is fetching data
@@ -304,7 +294,7 @@ let pokemonRepository = (function () {
           evolutions.classList.add("fw-bold");
           let evoList = document.createElement("span");
           let evoListText = "";
-          
+
           pokemon.evolutions.forEach((element) => {
             evoListText += element.charAt(0).toUpperCase() + element.slice(1);
             if (
@@ -317,14 +307,13 @@ let pokemonRepository = (function () {
 
           evolutions.innerText = `Evolutions: `;
           evoList.innerText = evoListText;
-          
+
           evoDiv.appendChild(evolutions);
           evoDiv.appendChild(evoList);
           detailsProfile.appendChild(evoDiv);
         });
       });
     });
-    console.log(pokemon);
   }
 
   //Clears modal of javascript-created content
