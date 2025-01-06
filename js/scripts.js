@@ -1,10 +1,15 @@
 let pokemonRepository = (function () {
   let pokemonList = [];
-  let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
+  let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=1500";
+  let form = document.querySelector("form");
   let searchInput = document.querySelector('input[type="search"');
 
   searchInput.addEventListener("keyup", (e) => {
     searchPokemons(e.target.value);
+  });
+
+  form.addEventListener("submit", () => {
+    searchPokemons(searchInput.value);
   });
 
   function getAll() {
@@ -148,7 +153,8 @@ let pokemonRepository = (function () {
 
   function getEvolutions(array, evos = []) {
     evos.push(array[0].species.name);
-    if (array[0].evolves_to.length > 0) getEvolutions(array[0].evolves_to, evos);
+    if (array[0].evolves_to.length > 0)
+      getEvolutions(array[0].evolves_to, evos);
     return evos;
   }
 
@@ -168,7 +174,6 @@ let pokemonRepository = (function () {
 
   //Brings up details modal about clicked pokemon
   function renderModalContent(pokemon) {
-    //let header = document.querySelector(".modal-header");
     let prevSpan = document.querySelector(".prevButton");
     let nextSpan = document.querySelector(".nextButton");
 
@@ -356,11 +361,24 @@ let pokemonRepository = (function () {
   //Renders pokemon buttons on page based on search input
   function searchPokemons(input) {
     clearPage();
-    getAll().forEach(function (pokemon) {
-      if (pokemon.name.startsWith(input)) {
-        addListItem(pokemon);
-      }
-    });
+
+    if (!input) {
+      displayBaseList();
+    } else {
+      getAll().forEach(function (pokemon) {
+        if (pokemon.name.startsWith(input)) {
+          addListItem(pokemon);
+        }
+      });
+    }
+  }
+
+  //Renders basic starter-list of pokmons
+  function displayBaseList() {
+    let array = pokemonRepository.getAll();
+    for (i = 0; i < 150; i++) {
+      pokemonRepository.addListItem(array[i]);
+    }
   }
 
   return {
@@ -371,12 +389,11 @@ let pokemonRepository = (function () {
     loadList,
     loadDetails,
     switchModal,
+    displayBaseList,
   };
 })();
 
 //Fetches pokemons from API and renders buttons on page
 pokemonRepository.loadList().then(function () {
-  pokemonRepository.getAll().forEach(function (pokemon) {
-    pokemonRepository.addListItem(pokemon);
-  });
+  pokemonRepository.displayBaseList();
 });

@@ -1,2 +1,4 @@
 Pokedex project for Careerfoundry web development course.
-The goal is to build a small web app that loads data from an external API for viewing.
+
+-Uses [pokeapi.co](https://pokeapi.co/) for Pokemon data
+-Uses Bootstrap 5.3.3

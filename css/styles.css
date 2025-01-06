@@ -6,6 +6,8 @@
     --button-hover-color: rgb(35, 94, 184);
     --closebutton-hover-color: rgb(255, 133, 103);
     --box-shadow-color: rgb(0, 0, 0, 0.5);
+    --link-color: #ff9d8a;
+    --link-color-hover: rgb(224, 99, 68);
 }
 
 html {
@@ -29,7 +31,7 @@ body {
     background-color: var(--secondary-color);
     z-index: -2;
     transform: skewY(-25deg);
-    top: -700px;
+    top: -1000px;
 }
 
 .content {
@@ -53,7 +55,7 @@ input[type="search"] {
 
 main {
     padding: 32px;
-    height: 100%;
+    min-height: 100vh;
 }
 
 .pokemon-list>div {
@@ -172,6 +174,15 @@ main {
     background-color: rgb(243, 125, 89);
 }
 
+.type-span.ice {
+    background-color: rgb(169, 206, 255);
+    color: black;
+}
+
+.type-span.dark {
+    background-color: rgb(38, 34, 99);
+}
+
 
 .details-profile {
     border: 2px solid var(--primary-color);
@@ -187,11 +198,13 @@ main {
 
 .modal-title {
     font-size: 1.5rem;
+    margin: 0;
 }
 
 .description {
     font-style: italic;
 }
+
 
 .pokemon-next,
 .pokemon-prev {
@@ -206,4 +219,37 @@ main {
 .pokemon-next:focus,
 .pokemon-prev:focus {
     color: rgb(0, 0, 0, 0.75);
+}
+
+footer {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 0.8rem;
+}
+
+footer>div>div p {
+    margin: 0;
+}
+
+footer a {
+    color: var(--link-color);
+}
+
+footer a:hover,
+footer a:focus {
+    color: var(--link-color-hover);
+}
+
+.loading-message {
+    margin: 32px;
+}
+
+.pokemon-image {
+    min-width: 150px;
+}
+
+@media all and (max-width: 576px) {
+    .modal-title {
+        font-size: 1.25rem;
+    }
 }
