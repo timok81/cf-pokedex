@@ -3,12 +3,18 @@ let pokemonRepository = (function () {
   let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=1500";
   let form = document.querySelector("form");
   let searchInput = document.querySelector('input[type="search"');
+  let searchButton = document.querySelector(".search-button");
 
-  searchInput.addEventListener("keyup", (e) => {
-    searchPokemons(e.target.value);
+  searchInput.addEventListener("keyup", () => {
+    searchPokemons(searchInput.value);
   });
 
-  form.addEventListener("submit", () => {
+  form.addEventListener("search", () => {
+    searchPokemons(searchInput.value);
+  });
+
+  searchButton.addEventListener("click", () => {
+    console.log(searchInput.value);
     searchPokemons(searchInput.value);
   });
 
@@ -50,10 +56,6 @@ let pokemonRepository = (function () {
   //Brings up modal
   function showDetails(pokemon) {
     renderModalContent(pokemon);
-  }
-
-  function find(name) {
-    return pokemonList.filter((pokemon) => pokemon.name === name);
   }
 
   //Fetches list of pokemons from API
@@ -366,7 +368,7 @@ let pokemonRepository = (function () {
       displayBaseList();
     } else {
       getAll().forEach(function (pokemon) {
-        if (pokemon.name.startsWith(input)) {
+        if (pokemon.name.startsWith(input.toLowerCase())) {
           addListItem(pokemon);
         }
       });
@@ -385,7 +387,6 @@ let pokemonRepository = (function () {
     getAll,
     add,
     addListItem,
-    find,
     loadList,
     loadDetails,
     switchModal,
