@@ -59,69 +59,60 @@ let pokemonRepository = (function () {
   }
 
   //Fetches list of pokemons from API
-  function loadList() {
+  async function loadList() {
     showLoadingMessage();
-    return fetch(apiUrl)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (json) {
-        hideLoadingMessage();
-        let index = 1;
-        json.results.forEach(function (item) {
-          let pokemon = {
-            name: item.name,
-            detailsUrl: item.url,
-          };
-          add(pokemon);
-          index++;
-        });
-      })
-      .catch(function (error) {
-        hideLoadingMessage();
-        console.error(error);
+    try {
+      const response = await fetch(apiUrl);
+      const json = await response.json();
+      hideLoadingMessage();
+      let index = 1;
+      json.results.forEach(function (item) {
+        let pokemon = {
+          name: item.name,
+          detailsUrl: item.url,
+        };
+        add(pokemon);
+        index++;
       });
+    } catch (error) {
+      hideLoadingMessage();
+      console.error(error);
+    }
   }
 
   //Fetches pokemon's details from API
-  function loadDetails(item) {
+  async function loadDetails(item) {
     let url = item.detailsUrl;
     showLoadingMessage();
 
-    return fetch(url)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (details) {
-        hideLoadingMessage();
-        item.imageUrl = details.sprites.other["official-artwork"].front_default;
-        item.height = details.height;
-        item.types = details.types;
-        item.weight = details.weight;
-        item.abilities = details.abilities;
-        item.speciesUrl = details.species.url;
-      })
-      .catch(function (error) {
-        hideLoadingMessage();
-        console.error(error);
-      });
+    try {
+      const response = await fetch(url);
+      const details = await response.json();
+      hideLoadingMessage();
+      item.imageUrl = details.sprites.other["official-artwork"].front_default;
+      item.height = details.height;
+      item.types = details.types;
+      item.weight = details.weight;
+      item.abilities = details.abilities;
+      item.speciesUrl = details.species.url;
+    } catch (error) {
+      hideLoadingMessage();
+      console.error(error);
+    }
   }
 
   //Fetches pokemon's species details from API
-  function loadSpecies(item) {
+  async function loadSpecies(item) {
     let url = item.speciesUrl;
 
-    return fetch(url)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (species) {
-        item.evoUrl = species.evolution_chain.url;
-        item.flavorText = getEnFlavorText(species.flavor_text_entries);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+    try {
+      const response = await fetch(url);
+      const species = await response.json();
+      item.evoUrl = species.evolution_chain.url;
+      item.flavorText = getEnFlavorText(species.flavor_text_entries);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   //Fetches pokemon's english language flavor text from API
@@ -138,19 +129,16 @@ let pokemonRepository = (function () {
   }
 
   //Fetches pokemon's evolutions from API
-  function loadEvolutions(item) {
+  async function loadEvolutions(item) {
     let url = item.evoUrl;
 
-    return fetch(url)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (data) {
-        item.evolutions = getEvolutions([data.chain]);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      item.evolutions = getEvolutions([data.chain]);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function getEvolutions(array, evos = []) {
@@ -175,7 +163,17 @@ let pokemonRepository = (function () {
   }
 
   //Brings up details modal about clicked pokemon
-  function renderModalContent(pokemon) {
+  async function renderModalContent(pokemon) {
+    try {
+      await loadDetails(pokemon);
+      await Promise.all([loadSpecies(pokemon), loadEvolutions(pokemon)]);
+      populateModal(pokemon);
+    } catch {
+      console.error("Content could not be retrieved");
+    }
+  }
+
+  function populateModal(pokemon) {
     let prevSpan = document.querySelector(".prevButton");
     let nextSpan = document.querySelector(".nextButton");
 
@@ -203,124 +201,112 @@ let pokemonRepository = (function () {
     let modal = document.querySelector(".modal");
     modal.addEventListener("hidden.bs.modal", clearModal);
 
-    //Renders info in modal based on API data
-    loadDetails(pokemon).then(function () {
-      //Renders pokemon image
-      let image = document.querySelector(".pokemon-image");
-      image.src = pokemon.imageUrl;
+    //Renders pokemon image
+    let image = document.querySelector(".pokemon-image");
+    image.src = pokemon.imageUrl;
 
-      //Renders pokemon name
-      let name = document.querySelector(".modal-title");
-      name.innerText =
-        "#" +
-        (pokemonList.indexOf(pokemon) + 1).toString() +
-        " " +
-        pokemon.name.charAt(0).toUpperCase() +
-        pokemon.name.slice(1);
+    //Renders pokemon name
+    let name = document.querySelector(".modal-title");
+    name.innerText =
+      "#" +
+      (pokemonList.indexOf(pokemon) + 1).toString() +
+      " " +
+      pokemon.name.charAt(0).toUpperCase() +
+      pokemon.name.slice(1);
 
-      //Creates container for type indicators
-      let typeContainer = document.createElement("div");
-      typeContainer.classList.add("row");
-      typeContainer.classList.add("justify-content-center");
-      typeContainer.classList.add("type-container");
-      pokemonDetails.appendChild(typeContainer);
+    //Creates container for type indicators
+    let typeContainer = document.createElement("div");
+    typeContainer.classList.add("row");
+    typeContainer.classList.add("justify-content-center");
+    typeContainer.classList.add("type-container");
+    pokemonDetails.appendChild(typeContainer);
 
-      //Renders pokemon type indicators
-      pokemon.types.forEach((element) => {
-        let typeIndicator = document.createElement("div");
-        typeIndicator.classList.add("type-span");
-        typeIndicator.classList.add(`${element.type.name}`);
-        typeIndicator.innerText = element.type.name.toUpperCase();
-        typeContainer.appendChild(typeIndicator);
-      });
-
-      //Renders pokemon details info area
-      let detailsProfile = document.createElement("div");
-      detailsProfile.classList.add("details-profile");
-      pokemonDetails.appendChild(detailsProfile);
-
-      let description = document.createElement("p");
-      description.classList.add("mb-2");
-      description.classList.add("description");
-      detailsProfile.appendChild(description);
-
-      let heightDiv = document.createElement("div");
-      let height = document.createElement("span");
-      let heightText = document.createElement("span");
-      height.classList.add("fw-bold");
-      height.innerText = `Height: `;
-      heightText.innerText = pokemon.height;
-      heightDiv.appendChild(height);
-      heightDiv.appendChild(heightText);
-      detailsProfile.appendChild(heightDiv);
-
-      let weightDiv = document.createElement("div");
-      let weight = document.createElement("span");
-      let weightText = document.createElement("span");
-      weight.classList.add("fw-bold");
-      weight.innerText = `Weight: `;
-      weightText.innerText = pokemon.weight;
-      weightDiv.appendChild(weight);
-      weightDiv.appendChild(weightText);
-      detailsProfile.appendChild(weightDiv);
-
-      let abilitiesDiv = document.createElement("div");
-      let abilitiesList = "";
-      let abilities = document.createElement("span");
-      abilities.classList.add("fw-bold");
-      abilities.innerText = `Abilities: `;
-      let abilitiesText = document.createElement("span");
-      let abilitiesTextContent = "";
-
-      pokemon.abilities.forEach((element) => {
-        abilitiesTextContent +=
-          element.ability.name.charAt(0).toUpperCase() +
-          element.ability.name.slice(1);
-        if (
-          pokemon.abilities.indexOf(element) !=
-          pokemon.abilities.length - 1
-        ) {
-          abilitiesTextContent += ", ";
-        }
-
-        abilitiesText.innerText = abilitiesTextContent;
-        abilitiesDiv.appendChild(abilities);
-        abilitiesDiv.appendChild(abilitiesText);
-        detailsProfile.appendChild(abilitiesDiv);
-      });
-
-      loadSpecies(pokemon).then(function () {
-        loadEvolutions(pokemon).then(function () {
-          let text = pokemon.flavorText
-            .replaceAll("\n", " ")
-            .replaceAll("\f", " ");
-          description.innerText = text;
-
-          let evoDiv = document.createElement("div");
-          let evolutions = document.createElement("span");
-          evolutions.classList.add("fw-bold");
-          let evoList = document.createElement("span");
-          let evoListText = "";
-
-          pokemon.evolutions.forEach((element) => {
-            evoListText += element.charAt(0).toUpperCase() + element.slice(1);
-            if (
-              pokemon.evolutions.indexOf(element) !=
-              pokemon.evolutions.length - 1
-            ) {
-              evoListText += " > ";
-            }
-          });
-
-          evolutions.innerText = `Evolutions: `;
-          evoList.innerText = evoListText;
-
-          evoDiv.appendChild(evolutions);
-          evoDiv.appendChild(evoList);
-          detailsProfile.appendChild(evoDiv);
-        });
-      });
+    //Renders pokemon type indicators
+    pokemon.types.forEach((element) => {
+      let typeIndicator = document.createElement("div");
+      typeIndicator.classList.add("type-span");
+      typeIndicator.classList.add(`${element.type.name}`);
+      typeIndicator.innerText = element.type.name.toUpperCase();
+      typeContainer.appendChild(typeIndicator);
     });
+
+    //Renders pokemon details info area
+    let detailsProfile = document.createElement("div");
+    detailsProfile.classList.add("details-profile");
+    pokemonDetails.appendChild(detailsProfile);
+
+    let description = document.createElement("p");
+    description.classList.add("mb-2");
+    description.classList.add("description");
+    detailsProfile.appendChild(description);
+
+    let heightDiv = document.createElement("div");
+    let height = document.createElement("span");
+    let heightText = document.createElement("span");
+    height.classList.add("fw-bold");
+    height.innerText = `Height: `;
+    heightText.innerText = pokemon.height;
+    heightDiv.appendChild(height);
+    heightDiv.appendChild(heightText);
+    detailsProfile.appendChild(heightDiv);
+
+    let weightDiv = document.createElement("div");
+    let weight = document.createElement("span");
+    let weightText = document.createElement("span");
+    weight.classList.add("fw-bold");
+    weight.innerText = `Weight: `;
+    weightText.innerText = pokemon.weight;
+    weightDiv.appendChild(weight);
+    weightDiv.appendChild(weightText);
+    detailsProfile.appendChild(weightDiv);
+
+    let abilitiesDiv = document.createElement("div");
+    let abilitiesList = "";
+    let abilities = document.createElement("span");
+    abilities.classList.add("fw-bold");
+    abilities.innerText = `Abilities: `;
+    let abilitiesText = document.createElement("span");
+    let abilitiesTextContent = "";
+
+    pokemon.abilities.forEach((element) => {
+      abilitiesTextContent +=
+        element.ability.name.charAt(0).toUpperCase() +
+        element.ability.name.slice(1);
+      if (pokemon.abilities.indexOf(element) != pokemon.abilities.length - 1) {
+        abilitiesTextContent += ", ";
+      }
+
+      abilitiesText.innerText = abilitiesTextContent;
+      abilitiesDiv.appendChild(abilities);
+      abilitiesDiv.appendChild(abilitiesText);
+      detailsProfile.appendChild(abilitiesDiv);
+    });
+
+    let text = pokemon.flavorText.replaceAll("\n", " ").replaceAll("\f", " ");
+    description.innerText = text;
+
+    let evoDiv = document.createElement("div");
+    let evolutions = document.createElement("span");
+    evolutions.classList.add("fw-bold");
+    let evoList = document.createElement("span");
+    let evoListText = "";
+
+    pokemon.evolutions.forEach((element) => {
+      evoListText += element.charAt(0).toUpperCase() + element.slice(1);
+      if (
+        pokemon.evolutions.indexOf(element) !=
+        pokemon.evolutions.length - 1
+      ) {
+        evoListText += " > ";
+      }
+    });
+
+    evolutions.innerText = `Evolutions: `;
+    evoList.innerText = evoListText;
+
+    evoDiv.appendChild(evolutions);
+    evoDiv.appendChild(evoList);
+    detailsProfile.appendChild(evoDiv);
   }
 
   //Clears modal of javascript-created content
@@ -377,19 +363,14 @@ let pokemonRepository = (function () {
 
   //Renders basic starter-list of pokmons
   function displayBaseList() {
-    let array = pokemonRepository.getAll();
+    let array = getAll();
     for (i = 0; i < 150; i++) {
-      pokemonRepository.addListItem(array[i]);
+      addListItem(array[i]);
     }
   }
 
   return {
-    getAll,
-    add,
-    addListItem,
     loadList,
-    loadDetails,
-    switchModal,
     displayBaseList,
   };
 })();
