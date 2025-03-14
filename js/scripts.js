@@ -165,8 +165,10 @@ let pokemonRepository = (function () {
   //Brings up details modal about clicked pokemon
   async function renderModalContent(pokemon) {
     try {
+      //get all pokemon data needed
       await loadDetails(pokemon);
-      await Promise.all([loadSpecies(pokemon), loadEvolutions(pokemon)]);
+      await loadSpecies(pokemon);
+      await loadEvolutions(pokemon);
       populateModal(pokemon);
     } catch {
       console.error("Content could not be retrieved");
