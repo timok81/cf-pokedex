@@ -331,6 +331,7 @@ let pokemonRepository = (function () {
   function clearModal() {
     // enable scrolling
     document.documentElement.style.overflow = "scroll";
+    document.documentElement.style.overflowX = "hidden";
     document.body.scroll = "yes";
 
     let image = document.querySelector(".pokemon-image");
