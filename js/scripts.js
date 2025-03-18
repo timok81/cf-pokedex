@@ -4,6 +4,7 @@ let pokemonRepository = (function () {
   let form = document.querySelector("form");
   let searchInput = document.querySelector('input[type="search"');
   let searchButton = document.querySelector(".search-button");
+  let pokemonDOMList = document.querySelector(".pokemon-list");
 
   searchInput.addEventListener("keyup", () => {
     searchPokemons(searchInput.value);
@@ -60,11 +61,10 @@ let pokemonRepository = (function () {
 
   //Fetches list of pokemons from API
   async function loadList() {
-    showLoadingMessage();
+    showLoadingMessage(pokemonDOMList);
     try {
       const response = await fetch(apiUrl);
       const json = await response.json();
-      hideLoadingMessage();
       let index = 1;
       json.results.forEach(function (item) {
         let pokemon = {
@@ -75,20 +75,18 @@ let pokemonRepository = (function () {
         index++;
       });
     } catch (error) {
-      hideLoadingMessage();
       console.error(error);
     }
+    hideLoadingMessage();
   }
 
   //Fetches pokemon's details from API
   async function loadDetails(item) {
     let url = item.detailsUrl;
-    showLoadingMessage();
 
     try {
       const response = await fetch(url);
       const details = await response.json();
-      hideLoadingMessage();
       item.imageUrl = details.sprites.other["official-artwork"].front_default;
       item.height = details.height;
       item.types = details.types;
@@ -96,7 +94,6 @@ let pokemonRepository = (function () {
       item.abilities = details.abilities;
       item.speciesUrl = details.species.url;
     } catch (error) {
-      hideLoadingMessage();
       console.error(error);
     }
   }
@@ -149,12 +146,17 @@ let pokemonRepository = (function () {
   }
 
   //Displays loading msg while API is fetching data
-  function showLoadingMessage() {
-    let pokemonList = document.querySelector(".pokemon-list");
-    let message = document.createElement("p");
-    message.classList.add("loading-message");
-    message.innerText = "Retrieving Pokemon data...";
-    pokemonList.appendChild(message);
+  function showLoadingMessage(target) {
+    let spinnerContainer = document.createElement("div");
+    spinnerContainer.classList.add(
+      "loading-message",
+      "spinner-border",
+      "text-primary"
+    );
+    let spinnerSpan = document.createElement("span");
+    spinnerSpan.classList.add("visually-hidden");
+    spinnerContainer.appendChild(spinnerSpan);
+    target.appendChild(spinnerContainer);
   }
 
   function hideLoadingMessage() {
@@ -164,6 +166,14 @@ let pokemonRepository = (function () {
 
   //Brings up details modal about clicked pokemon
   async function renderModalContent(pokemon) {
+    // disable scrolling
+    document.documentElement.style.overflow = "hidden";
+    document.body.scroll = "no";
+
+    let pokemonImageContainer = document.querySelector(
+      ".pokemon-image-container"
+    );
+    showLoadingMessage(pokemonImageContainer);
     try {
       //get all pokemon data needed
       await loadDetails(pokemon);
@@ -173,11 +183,12 @@ let pokemonRepository = (function () {
     } catch {
       console.error("Content could not be retrieved");
     }
+    hideLoadingMessage();
   }
 
   function populateModal(pokemon) {
-    let prevSpan = document.querySelector(".prevButton");
-    let nextSpan = document.querySelector(".nextButton");
+    let prevSpan = document.querySelector(".prev-button");
+    let nextSpan = document.querySelector(".next-button");
 
     if (pokemonList[pokemonList.indexOf(pokemon) + 1]) {
       let nextButton = document.createElement("button");
@@ -205,7 +216,12 @@ let pokemonRepository = (function () {
 
     //Renders pokemon image
     let image = document.querySelector(".pokemon-image");
+    const placeholder = document.querySelector(".pokemon-image-placeholder");
     image.src = pokemon.imageUrl;
+    image.onload = () => {
+      placeholder.classList.add("d-none"); // Hide placeholder
+      image.classList.remove("d-none"); // Show image
+    };
 
     //Renders pokemon name
     let name = document.querySelector(".modal-title");
@@ -313,11 +329,23 @@ let pokemonRepository = (function () {
 
   //Clears modal of javascript-created content
   function clearModal() {
+    // enable scrolling
+    document.documentElement.style.overflow = "scroll";
+    document.body.scroll = "yes";
+
+    let image = document.querySelector(".pokemon-image");
+    const placeholder = document.querySelector(".pokemon-image-placeholder");
+    image.src = "";
+    let name = document.querySelector(".modal-title");
+    name.innerText = "";
     let pokemonDetails = document.querySelector(".modal-body");
     let content = pokemonDetails.querySelectorAll("div");
     content.forEach((element) => {
       element.remove();
     });
+
+    placeholder.classList.remove("d-none");
+    image.classList.add("d-none");
 
     let nextButton = document.querySelector(".pokemon-next");
     if (nextButton) nextButton.remove();

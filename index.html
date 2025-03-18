@@ -31,13 +31,17 @@
                         <div class="row">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="row justify-content-center align-items-center">
-                            <span class="prevButton col-1 justify-content-start p-0 m-0"></span>
-                            <img src="#" alt="image of pokemon" class="col-10 pokemon-image">
-                            <span class="nextButton col-1 text-end p-0 m-0"></span>
+                        <div class="row justify-content-center align-items-center pokemon-image-container">
+                            <div class="col-10 pokemon-image-placeholder placeholder-glow">
+                                <div class="placeholder w-100" style="height: 200px; background-color: lightgray;">
+                                </div>
+                            </div>
+                            <img src="#" alt="image of pokemon" class="col-10 pokemon-image d-none">
                         </div>
                         <div class="row align-items-center justify-content-between flex-nowrap">
-                            <h1 class="modal-title text-center col mx-0"></h1>
+                            <div class="prev-button col-1 p-0"></div>
+                            <h1 class="modal-title text-center col mx-0 p-0 col-10"></h1>
+                            <div class="next-button col-1 p-0"></div>
                         </div>
                     </div>
                 </div>
@@ -77,7 +81,8 @@
         <footer class="container text-center">
             <div class="row align-items-center">
                 <div class="col p-2">
-                    <p>All Pokémon data on this site comes from <a href="https://pokeapi.co/" target="_blank">pokeapi.co</a></p>
+                    <p>All Pokémon data on this site comes from <a href="https://pokeapi.co/"
+                            target="_blank">pokeapi.co</a></p>
                 </div>
             </div>
         </footer>
