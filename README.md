@@ -16,6 +16,12 @@ The app can be viewed here: https://timok81.github.io/cf-pokedex/
 - View and search for Pokemons
 - Uses Bootstrap 5.3.3
 
+## Technologies used
+
+- Javascript
+- HTML, CSS
+- Bootstrap
+
 ## Images
 
 ![Screenshot of the app](/img/pokedex1.png)
