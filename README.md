@@ -26,3 +26,4 @@ The app can be viewed here: https://timok81.github.io/cf-pokedex/
 
 ![Screenshot of the app](/img/pokedex1.png)
 ![Screenshot of the app](/img/pokedex2.png)
+![Screenshot of the app](/img/pokedex3.png)
